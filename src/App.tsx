@@ -3,13 +3,14 @@ import React, { Component } from 'react';
 import './App.css';
 import SearchBar from './components/search_bar';
 import ViewPanel from './components/view_panel';
-import GithubApi, { TopicsList, RepoList } from './api/github';
+import GithubApi, { TopicFreqs, TopicRepos, RepoList } from './api/github';
 
 
 interface AppProps {}
 interface AppState {
   repos: RepoList | null,
-  topics: TopicsList | null,
+  tFreqs: TopicFreqs | null,
+  tRepos: TopicRepos | null
   activeTopic: string | null,
   error: null 
 }
@@ -17,34 +18,44 @@ interface AppState {
 class App extends Component<AppProps, AppState> {
   private api: GithubApi;
 
-  state = {
-    repos: null,
-    topics: null,
-    activeTopic: null,
-    error: null
-  }
-
   constructor(props: AppProps) {
     super(props);
     this.api = new GithubApi(this.processResponse);
+    this.state = {
+      repos: null,
+      tFreqs: null,
+      tRepos: null,
+      activeTopic: null,
+      error: null
+    }
   }
 
   startSearch = async (query: string): Promise<void> => {
     const reposList: RepoList = await this.api.getUserRepos(query);
+    // this.api.sendTopicsRequests(query, reposList);
+    this.api.sendTopicsRequests(query, reposList, 1, 1000);
     this.setState({repos: reposList});
-    this.api.sendTopicsRequests(query, reposList);
   }
 
-  processResponse = (repoName: string, topics: string[]): void => {
-    console.log(`${repoName}: ${topics}`);
+  processResponse = (repoName: string, repoTopics: string[]): void => {
+    if (repoTopics.length > 0) {
+      const tFreqsNew = {...this.state.tFreqs};
+      const tReposNew = {...this.state.tRepos};
+      repoTopics.forEach(topic => {
+        tFreqsNew[topic] ? tFreqsNew[topic] += 1 : tFreqsNew[topic] = 1;
+        tReposNew[topic] ? tReposNew[topic].push(repoName) : tReposNew[topic] = [repoName];
+      });
+      this.setState({tFreqs: tFreqsNew});
+      this.setState({tRepos: tReposNew});
+    }
   }
 
   render() {
-    const {repos, topics, activeTopic} = this.state;
+    const {repos, tFreqs, tRepos, activeTopic} = this.state;
     return (
       <div className="App">
         <SearchBar searchFn={this.startSearch} btnState={repos? "Reload" : "Search"}/>
-        <ViewPanel repos={repos} topics={topics} activeTopic={activeTopic}/>
+        <ViewPanel repos={repos} tFreqs={tFreqs} tRepos={tRepos} activeTopic={activeTopic}/>
       </div>
     );
   

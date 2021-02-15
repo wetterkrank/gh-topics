@@ -4,6 +4,7 @@ import { RepoList } from '../api/github';
 
 type ReposViewProps = {
   repos: RepoList | null,
+  activeTopic: string
 }
 
 class ReposView extends Component<ReposViewProps, {}> {
