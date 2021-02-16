@@ -22,7 +22,7 @@ class TopicsList extends Component<TopicsListProps, {}> {
     const tNames = Object.keys(this.props.tFreqs);
     return (
       <ul className="topics-list">
-        {tNames.map(name => <Topic name={name} />)}
+        {tNames.map(name => <Topic name={name} key={name} />)}
       </ul>
     );
   }

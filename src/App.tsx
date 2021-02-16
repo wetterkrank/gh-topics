@@ -17,27 +17,30 @@ interface AppState {
 
 class App extends Component<AppProps, AppState> {
   private api: GithubApi;
+  private static zeroState = {
+    repos: null,
+    tFreqs: null,
+    tRepos: null,
+    activeTopic: null,
+    error: null
+  }
 
   constructor(props: AppProps) {
     super(props);
     this.api = new GithubApi(this.processResponse);
-    this.state = {
-      repos: null,
-      tFreqs: null,
-      tRepos: null,
-      activeTopic: null,
-      error: null
-    }
+    this.state = {...App.zeroState}
   }
 
   startSearch = async (query: string): Promise<void> => {
+    // TODO: Clear the view?
+    this.setState (App.zeroState);
     const reposList: RepoList = await this.api.getUserRepos(query);
-    // this.api.sendTopicsRequests(query, reposList);
-    this.api.sendTopicsRequests(query, reposList, 1, 1000);
+    this.api.sendTopicsRequests(query, reposList, 1, 100);
     this.setState({repos: reposList});
   }
 
   processResponse = (repoName: string, repoTopics: string[]): void => {
+    // TODO: Save results in Local Storage when complete
     if (repoTopics.length > 0) {
       const tFreqsNew = {...this.state.tFreqs};
       const tReposNew = {...this.state.tRepos};
