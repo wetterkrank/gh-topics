@@ -43,8 +43,9 @@ class App extends Component<AppProps, AppState> {
   }
 
   // Receives app state updates from components
-  updateStatus = (update: QueryState): void => {
+  updateStatus = (update: QueryState, err?: any): void => {
     this.setState({ queryState: update });
+    if (err) console.log(`Error: ${err}`);
   }
 
   // Callback that processes each individual repo response

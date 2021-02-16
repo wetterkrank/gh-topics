@@ -1,16 +1,15 @@
 import { Octokit } from "@octokit/rest";
-// import { OctokitResponse } from "@octokit/types";
 
 type TopicFreqs = { [key: string]: number };
 type TopicRepos = { [key: string]: string[] };
 type RepoList = { key: string, name: string, url: string }[];
-type QueryState = "new" | "started" | "done";
+type QueryState = "new" | "started" | "done" | "error";
 
 
 class GithubApi {
   private gh: Octokit;
   private resultFn: (repoName: string, topics: string[]) => void;
-  private statusFn: (status: QueryState) => void;
+  private statusFn: (status: QueryState, err?: any) => void;
   private test_data: TopicFreqs;
 
   constructor(resultFn: (repoName: string, topics: string[]) => void, 
@@ -24,8 +23,14 @@ class GithubApi {
 
   async getUserRepos(username: string): Promise<RepoList> {
     // TODO: Pagination
-    const repos = await this.gh.repos.listForUser({ username: username });
-    const repoList: RepoList = repos.data.map(repo => ({ key: repo.name, name: repo.name, url: repo.url }));
+    let repoList: RepoList = [];
+    try {
+      const repos = await this.gh.repos.listForUser({ username: username });
+      repoList = repos.data.map(repo => ({ key: repo.name, name: repo.name, url: repo.url }));
+    } catch(err) {
+      console.log(`OORGH: ${err.name}`);
+      this.statusFn("error", err);
+    }
     return repoList;
   }
     
@@ -41,6 +46,10 @@ class GithubApi {
       promises.push(
         this.gh.repos.getAllTopics({ owner: username, repo: repo.name })
         .then(response => { this.resultFn(repo.name, response.data.names); })
+        .catch(err => {
+          console.log(`AARGH: ${err}`);
+          this.statusFn("error", err);
+        })
       );
       if (counter % chunkSize === 0) {
         await delay(ms);

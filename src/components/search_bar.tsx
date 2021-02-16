@@ -46,7 +46,7 @@ class SearchBar extends Component<SearchBarProps, SearchBarState> {
           <fieldset>
             <input type="text" id="search-input" required placeholder="wetterkrank" onChange = {this.resetState} />
             {" "}
-            <button type="submit" className="pure-button pure-button-primary">
+            <button type="submit" className="pure-button pure-button-primary" disabled={showSpinner}>
               {btnText}
               {showSpinner ? this.spinner() : null}
             </button>

@@ -9,6 +9,11 @@ type TopicProps = {
 }
 
 class Topic extends Component<TopicProps, {}> {
+  toScale(x: number, max: number, scale: number): number {
+    let res: number = x / max * scale;
+    res = Math.ceil(res);
+    return res;
+  }
 
   render() {
     return (
