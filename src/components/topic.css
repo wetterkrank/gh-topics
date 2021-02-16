@@ -1,0 +1,12 @@
+.Topic {
+    display: inline-block;
+    margin: 0 .125em .333em 0;
+    padding: 0 10px;
+    line-height: 22px;
+    vertical-align: middle;
+    border: 1px solid transparent;
+    border-radius: 2em;
+    font-weight: 400;
+    color: #0366d6;
+    background-color: #e7f3ff;
+}

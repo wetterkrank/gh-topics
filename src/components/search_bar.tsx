@@ -1,5 +1,7 @@
 import { Component } from "react";
 
+import './search_bar.css';
+
 type SearchBarProps = {
   btnState: "Search" | "Reload",
   searchFn: (query: string) => void
@@ -19,10 +21,10 @@ class SearchBar extends Component<SearchBarProps, {}> {
 
   render() {
     return (
-      <div className="search-bar">
+      <div className="SearchBar">
         <form className="search-form" onSubmit={(e: React.FormEvent) => { this.submitInput(e); }}>
           <input type="text" className="search-input" id="search-input" required />
-          <input type="submit" value={this.props.btnState} className="search-button"/>
+          <input type="submit" className="search-button" value={this.props.btnState} />
         </form>
       </div>
     );

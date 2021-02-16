@@ -40,14 +40,8 @@ class GithubApi {
       .then(response => { this.resultFn(repo.name, response.data.names) });
     }
   };
-
-  // const flatTopicsList: string[] = results.reduce((all: string[], one: string[]) => all.concat(one));
-  // const countedTopics: RepoList = flatTopicsList.reduce((freqs, value) => {
-  //   freqs[value] ? freqs[value]++ : freqs[value] = 1;
-  //   return freqs;
-  // }, {} as RepoList);
-  // return countedTopics;
 }
+
 
 export type { TopicFreqs, TopicRepos, RepoList };
 export default GithubApi;

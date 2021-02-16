@@ -1,5 +1,7 @@
 import { Component } from "react";
 
+import './topic.css';
+
 type TopicProps = {
   name: string,
   // active: boolean,
@@ -10,7 +12,7 @@ class Topic extends Component<TopicProps, {}> {
 
   render() {
     return (
-      <li className="topic">
+      <li className="Topic">
         {this.props.name}
       </li>
     );

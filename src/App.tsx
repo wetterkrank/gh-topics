@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 
 import './App.css';
 import SearchBar from './components/search_bar';
@@ -35,7 +35,7 @@ class App extends Component<AppProps, AppState> {
     // TODO: Clear the view?
     this.setState (App.zeroState);
     const reposList: RepoList = await this.api.getUserRepos(query);
-    this.api.sendTopicsRequests(query, reposList, 1, 100);
+    this.api.sendTopicsRequests(query, reposList, 1, 200);
     this.setState({repos: reposList});
   }
 

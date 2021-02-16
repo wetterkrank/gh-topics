@@ -1,7 +1,9 @@
 import { Component } from "react";
 
-import Topic from './topic';
 import { TopicFreqs, TopicRepos } from '../api/github';
+import './topics_list.css';
+
+import Topic from './topic';
 
 type TopicsListProps = {
   tFreqs: TopicFreqs | null,
@@ -21,7 +23,7 @@ class TopicsList extends Component<TopicsListProps, {}> {
     
     const tNames = Object.keys(this.props.tFreqs);
     return (
-      <ul className="topics-list">
+      <ul className="TopicsList">
         {tNames.map(name => <Topic name={name} key={name} />)}
       </ul>
     );
