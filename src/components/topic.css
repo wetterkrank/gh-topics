@@ -1,4 +1,4 @@
-.Topic {
+.TopicsList__Topic {
     display: inline-block;
     margin: 0 .125em .333em 0;
     padding: 0 10px;
@@ -9,4 +9,26 @@
     font-weight: 400;
     color: #0366d6;
     background-color: #e7f3ff;
+    cursor: pointer;
+}
+
+.TopicsList__Topic:hover {
+    background-color: #def;
+}
+
+.TopicsList__Topic--f1 {
+    font-weight: 500;
+    font-size: 80%;
+}
+.TopicsList__Topic--f2 {
+    font-size: 100%;
+}
+.TopicsList__Topic--f3 {
+    font-size: 120%;
+}
+.TopicsList__Topic--f4 {
+    font-size: 140%;
+}
+.TopicsList__Topic--f5 {
+    font-size: 160%;
 }

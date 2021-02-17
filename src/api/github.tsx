@@ -1,4 +1,6 @@
 import { Octokit } from "@octokit/rest";
+import { RequestError } from "@octokit/request-error";
+
 
 type TopicFreqs = { [key: string]: number };
 type TopicRepos = { [key: string]: string[] };
@@ -28,8 +30,12 @@ class GithubApi {
       const repos = await this.gh.repos.listForUser({ username: username });
       repoList = repos.data.map(repo => ({ key: repo.name, name: repo.name, url: repo.url }));
     } catch(err) {
-      console.log(`OORGH: ${err.name}`);
-      this.statusFn("error", err);
+      if(err instanceof RequestError) {
+        console.log(`OORGH: ${err}`);
+        this.statusFn("error", err);
+      } else {
+        throw(err);
+      }
     }
     return repoList;
   }

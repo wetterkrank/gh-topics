@@ -4,21 +4,24 @@ import './topic.css';
 
 type TopicProps = {
   name: string,
+  fSize: number,
+  clickFn: (topicName: string) => void,
   // active: boolean,
-  // clickFn: () => void
 }
 
 class Topic extends Component<TopicProps, {}> {
-  toScale(x: number, max: number, scale: number): number {
-    let res: number = x / max * scale;
-    res = Math.ceil(res);
-    return res;
+
+  clickHandle = (event: React.MouseEvent) => {
+    const repoName = event.currentTarget.innerHTML;
+    console.log(repoName);
+    this.props.clickFn(repoName);
   }
 
   render() {
+    const { name, fSize } = this.props;
     return (
-      <li className="Topic">
-        {this.props.name}
+      <li className={`TopicsList__Topic TopicsList__Topic--f${fSize}`} onClick={this.clickHandle} >
+        {name}
       </li>
     );
   }

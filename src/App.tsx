@@ -2,43 +2,48 @@ import { Component } from 'react';
 
 import './App.css';
 import SearchBar from './components/search_bar';
-import ViewPanel from './components/view_panel';
+import TopicsList from './components/topics_list';
+import ReposView from './components/repos_view';
 import GithubApi, { TopicFreqs, TopicRepos, RepoList, QueryState } from './api/github';
 
 
-interface AppProps { }
+interface AppProps {}
 interface AppState {
-  repos: RepoList | null,
-  tFreqs: TopicFreqs | null,
-  tRepos: TopicRepos | null
-  activeTopic: string | null,
+  repos: RepoList,
+  tFreqs: TopicFreqs,
+  tRepos: TopicRepos,
+  queryState: QueryState,
+  selectedTopic: string,
+  modalIsOpen: boolean,
+  reposToShow: RepoList,
   error: null,
-  queryState: QueryState
 }
 
 class App extends Component<AppProps, AppState> {
   private api: GithubApi;
-  private static zeroState: AppState = {
-    repos: null,
-    tFreqs: null,
-    tRepos: null,
-    activeTopic: null,
+  private zeroState: AppState = {
     error: null,
-    queryState: "new"
+    repos: [],
+    tFreqs: {},
+    tRepos: {},
+    queryState: "new",
+    selectedTopic: "",
+    modalIsOpen: false,
+    reposToShow: [],
   }
 
   constructor(props: AppProps) {
     super(props);
     this.api = new GithubApi(this.processResponse, this.updateStatus);
-    this.state = { ...App.zeroState };
+    this.state = { ...this.zeroState };
   }
 
   // Gets triggered by Search button
   startSearch = async (query: string): Promise<void> => {
-    this.setState(App.zeroState);
+    this.setState(this.zeroState);
     this.setState({ queryState: "started" });
     const reposList: RepoList = await this.api.getUserRepos(query);
-    this.api.sendTopicsRequests(query, reposList, 1, 200);
+    this.api.sendTopicsRequests(query, reposList, 1, 100);
     this.setState({ repos: reposList });
   }
 
@@ -58,17 +63,36 @@ class App extends Component<AppProps, AppState> {
         tFreqsNew[topic] ? tFreqsNew[topic] += 1 : tFreqsNew[topic] = 1;
         tReposNew[topic] ? tReposNew[topic].push(repoName) : tReposNew[topic] = [repoName];
       });
-      this.setState({ tFreqs: tFreqsNew });
-      this.setState({ tRepos: tReposNew });
+      this.setState({ tFreqs: tFreqsNew, tRepos: tReposNew });
     }
   }
 
+  // Opens a modal window with the list of repos for selected topic
+  showRepos = (topicName: string): void => {
+    const repoNames: string[] = this.state.tRepos[topicName];
+    const reposToShow: RepoList = repoNames.map(repo => {
+      const x = this.state.repos.find(x => x.name === repo);
+      return { key: x!.name, name: x!.name, url: x!.url }
+    });
+    this.setState({ reposToShow: reposToShow, selectedTopic: topicName, modalIsOpen: true });
+  }
+
+  hideRepos = (): void => {
+    this.setState({ modalIsOpen: false });
+  }
+
   render() {
-    const { repos, tFreqs, tRepos, activeTopic, queryState } = this.state;
+    const { tFreqs, tRepos, queryState, modalIsOpen, reposToShow, selectedTopic } = this.state;
     return (
       <div className="App">
         <SearchBar queryState={queryState} searchFn={this.startSearch} statusFn={this.updateStatus} />
-        <ViewPanel repos={repos} tFreqs={tFreqs} tRepos={tRepos} activeTopic={activeTopic} />
+        <TopicsList tFreqs={tFreqs} tRepos={tRepos} clickFn={this.showRepos} />
+        <ReposView 
+          reposToShow={reposToShow}
+          selectedTopic={selectedTopic}
+          isOpen={modalIsOpen}
+          closeFn={this.hideRepos}
+        />
       </div>
     );
 

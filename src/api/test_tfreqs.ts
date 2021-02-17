@@ -1,5 +1,5 @@
-export const topicsTest = {
-  "1-2-3-testing-testing": 1,
+export const test_tFreqs = {
+  "devise": 1,
   "pundit": 1,
   "geocoder": 1,
   "cloudinary": 1,
