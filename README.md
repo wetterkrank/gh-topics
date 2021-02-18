@@ -1,6 +1,6 @@
 # GitHub Topics Cloud
-Displays a cloud-like list of topics for a given GitHub username.  
-A click on a topic opens a popup with the list of tagged repos.
+Displays a cloud-like list of topics for the given GitHub username.  
+A click on a topic opens a popup with the list of related repos.
 
 Demo: https://github-topics-cloud.vercel.app/
 
