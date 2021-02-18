@@ -8,7 +8,7 @@ import ReposView from './components/repos_view';
 import ErrorMessage from './components/error';
 import GithubApi, { TopicFreqs, TopicRepos, RepoList, QueryState, RequestError } from './api/github';
 
-const API_REQUEST_BATCH_SIZE: number = 1; // To batch the parallel calls
+const API_REQUEST_BATCH_SIZE: number = 1; // To batch the API calls
 const API_REQUEST_INTERVAL: number = 500; // Delay between API calls, ms
 
 interface AppProps {}
@@ -59,7 +59,8 @@ class App extends Component<AppProps, AppState> {
   // Receives app state updates from components
   updateStatus = (update: QueryState, err?: RequestError): void => {
     if (err) {
-      this.setState({ error: `${err.name}: ${err.status}` });
+      // this.setState({ error: `${err.name}: ${err.status}` });
+      this.setState({ error: err.toString() });
     } else if (update === "done" && Object.keys(this.state.tFreqs).length === 0) {
       this.setState({ error: "No topics found" });
     }
