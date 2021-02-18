@@ -16,11 +16,8 @@ class ReposView extends Component<ReposViewProps, {}> {
     Modal.setAppElement('#root');
   }
 
-  list(repos: RepoList) {
-    return repos.map(elt => <li className="repo-name" key={elt.key}> {elt.name} </li>)
-  }
-
   render() {
+    const { isOpen, closeFn, reposToShow, selectedTopic } = this.props;
     const modalStyle: Modal.Styles = {
       content: {
         top: '40%',
@@ -35,14 +32,13 @@ class ReposView extends Component<ReposViewProps, {}> {
         maxHeight: '50%'
       }
     };
-    
-    const { isOpen, closeFn, reposToShow, selectedTopic } = this.props;
+
     return (
       <Modal
         isOpen={isOpen}
         onRequestClose={closeFn}
         style={modalStyle}
-        contentLabel="Repositories marked with this topic"
+        contentLabel="Repositories tagged with this topic"
       >
         <h4 className="ReposView__header">Repos tagged '{selectedTopic}'</h4>
         <ul className="ReposView__list">

@@ -1,12 +1,15 @@
 import { Component } from 'react';
 
+import 'purecss/build/pure.css';
 import './App.css';
 import SearchBar from './components/search_bar';
 import TopicsList from './components/topics_list';
 import ReposView from './components/repos_view';
 import ErrorMessage from './components/error';
-import GithubApi, { TopicFreqs, TopicRepos, RepoList, QueryState } from './api/github';
+import GithubApi, { TopicFreqs, TopicRepos, RepoList, QueryState, RequestError } from './api/github';
 
+const API_REQUEST_BATCH_SIZE: number = 1; // To batch the parallel calls
+const API_REQUEST_INTERVAL: number = 500; // Delay between API calls, ms
 
 interface AppProps {}
 interface AppState {
@@ -44,14 +47,19 @@ class App extends Component<AppProps, AppState> {
     this.setState(this.zeroState);
     this.setState({ queryState: "started" });
     const reposList: RepoList = await this.api.getUserRepos(query);
-    this.api.sendTopicsRequests(query, reposList, 1, 100);
+    // debugger;
     this.setState({ repos: reposList });
+    if (reposList.length > 0) {
+      this.api.sendTopicsRequests(query, reposList, API_REQUEST_BATCH_SIZE, API_REQUEST_INTERVAL);
+    } else if (!this.state.error) {
+      this.setState({ queryState: "done", error: "No repos found" })
+    }
   }
 
   // Receives app state updates from components
-  updateStatus = (update: QueryState, err?: Error): void => {
+  updateStatus = (update: QueryState, err?: RequestError): void => {
     if (err) {
-      this.setState({ error: err.toString() });
+      this.setState({ error: `${err.name}: ${err.status}` });
     } else if (update === "done" && Object.keys(this.state.tFreqs).length === 0) {
       this.setState({ error: "No topics found" });
     }
