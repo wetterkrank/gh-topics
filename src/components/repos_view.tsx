@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import Modal from 'react-modal';
 import type { RepoList } from '../api/github';
+import './repos_view.css';
 
 type ReposViewProps = {
   reposToShow: RepoList,
@@ -22,7 +23,7 @@ class ReposView extends Component<ReposViewProps, {}> {
   render() {
     const modalStyle: Modal.Styles = {
       content: {
-        top: '50%',
+        top: '40%',
         left: '50%',
         right: 'auto',
         bottom: 'auto',
@@ -34,29 +35,21 @@ class ReposView extends Component<ReposViewProps, {}> {
         maxHeight: '50%'
       }
     };
-
-    const closeBtnStyle: React.CSSProperties = { 
-      position: 'absolute',
-      top: '10px',
-      right: '10px',
-    };
     
     const { isOpen, closeFn, reposToShow, selectedTopic } = this.props;
     return (
-      <div>
-        <Modal
-          isOpen={isOpen}
-          onRequestClose={closeFn}
-          style={modalStyle}
-          contentLabel="Repositories marked with this topic"
-        >
-          <button onClick={closeFn} style={closeBtnStyle} className="pure-button pure-button-primary">×</button>
-          <h4>Repos tagged {selectedTopic}</h4>
-          <ul>
-            {reposToShow.map(r => <li className="repo-name" key={r.key}> {r.name} </li>)}
-          </ul>
-        </Modal>
-      </div>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={closeFn}
+        style={modalStyle}
+        contentLabel="Repositories marked with this topic"
+      >
+        <h4 className="ReposView__header">Repos tagged '{selectedTopic}'</h4>
+        <ul className="ReposView__list">
+          {reposToShow.map(r => <li className="repo-name" key={r.key}> <a href={r.url} rel="noreferrer" target="_blank">{r.name}</a> </li>)}
+        </ul>
+        <button onClick={closeFn} className="pure-button pure-button-primary ReposView__closeBtn">Close</button>
+      </Modal>
     );
   }
 }

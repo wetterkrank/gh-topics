@@ -40,19 +40,18 @@ class SearchBar extends Component<SearchBarProps, SearchBarState> {
   render() {
     const { queryState } = this.props;
     const btnBusy = (queryState === "started") ? true : false; // Show spinner and disable button for ongoing search
-    const btnText = (queryState === "done") ? "Reload" : "Search"; // Button text is "Reload" when the search is complete
+    const btnText = (queryState === "done") ? "Refresh" : "Load"; // Button text is "Reload" when the search is complete
 
     return (
       <div className="SearchBar">
-        <form className="pure-form" onSubmit={(e: React.FormEvent) => { this.submitInput(e); }}>
-          <fieldset>
-            <input type="text" id="search-input" required placeholder="wetterkrank" onChange = {this.resetState} />
-            {" "}
-            <button type="submit" className="pure-button pure-button-primary" disabled={btnBusy}>
-              {btnText}
-              {btnBusy ? this.spinner() : null}
-            </button>
-          </fieldset>
+        <p>Enter a GitHub username:</p>
+        <form className="pure-form SearchBar__form" onSubmit={(e: React.FormEvent) => { this.submitInput(e); }}>
+          <input type="text" className="SearchBar__form-input" id="search-input" required placeholder="wetterkrank" onChange={this.resetState} />
+          {" "}
+          <button type="submit" className="SearchBar__form-button pure-button pure-button-primary" disabled={btnBusy}>
+            {btnText}
+            {btnBusy ? this.spinner() : null}
+          </button>
         </form>
       </div>
     );

@@ -4,3 +4,13 @@
   margin-top: 150px;
   margin-bottom: 50px;
 }
+
+a, a:visited {
+  text-decoration: underline dotted;
+  color: #0366d6;
+}
+
+a:hover {
+  color: #004492;
+}
+

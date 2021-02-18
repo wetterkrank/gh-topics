@@ -1,7 +1,13 @@
 .SearchBar {
-    text-align: center;
     margin-top: 50px;
     margin-bottom: 50px;
+    text-align: center;
+}
+
+.SearchBar__form-input {
+    /* Making sure it's centered on small screens */
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .SearchBar__loader {

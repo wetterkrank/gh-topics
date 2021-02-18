@@ -4,6 +4,7 @@ import './App.css';
 import SearchBar from './components/search_bar';
 import TopicsList from './components/topics_list';
 import ReposView from './components/repos_view';
+import ErrorMessage from './components/error';
 import GithubApi, { TopicFreqs, TopicRepos, RepoList, QueryState } from './api/github';
 
 
@@ -16,13 +17,13 @@ interface AppState {
   selectedTopic: string,
   modalIsOpen: boolean,
   reposToShow: RepoList,
-  error: null,
+  error: string,
 }
 
 class App extends Component<AppProps, AppState> {
   private api: GithubApi;
   private zeroState: AppState = {
-    error: null,
+    error: "",
     repos: [],
     tFreqs: {},
     tRepos: {},
@@ -48,9 +49,13 @@ class App extends Component<AppProps, AppState> {
   }
 
   // Receives app state updates from components
-  updateStatus = (update: QueryState, err?: any): void => {
+  updateStatus = (update: QueryState, err?: Error): void => {
+    if (err) {
+      this.setState({ error: err.toString() });
+    } else if (update === "done" && Object.keys(this.state.tFreqs).length === 0) {
+      this.setState({ error: "No topics found" });
+    }
     this.setState({ queryState: update });
-    if (err) console.log(`Error: ${err}`);
   }
 
   // Callback that processes each individual repo response
@@ -82,10 +87,11 @@ class App extends Component<AppProps, AppState> {
   }
 
   render() {
-    const { tFreqs, tRepos, queryState, modalIsOpen, reposToShow, selectedTopic } = this.state;
+    const { tFreqs, tRepos, queryState, modalIsOpen, reposToShow, selectedTopic, error } = this.state;
     return (
       <div className="App">
         <SearchBar queryState={queryState} searchFn={this.startSearch} statusFn={this.updateStatus} />
+        <ErrorMessage text={error} />
         <TopicsList tFreqs={tFreqs} tRepos={tRepos} clickFn={this.showRepos} />
         <ReposView 
           reposToShow={reposToShow}

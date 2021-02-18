@@ -28,7 +28,7 @@ class GithubApi {
     let repoList: RepoList = [];
     try {
       const repos = await this.gh.repos.listForUser({ username: username });
-      repoList = repos.data.map(repo => ({ key: repo.name, name: repo.name, url: repo.url }));
+      repoList = repos.data.map(repo => ({ key: repo.name, name: repo.name, url: repo.html_url }));
     } catch(err) {
       if(err instanceof RequestError) {
         console.log(`OORGH: ${err}`);
@@ -53,8 +53,12 @@ class GithubApi {
         this.gh.repos.getAllTopics({ owner: username, repo: repo.name })
         .then(response => { this.resultFn(repo.name, response.data.names); })
         .catch(err => {
-          console.log(`AARGH: ${err}`);
-          this.statusFn("error", err);
+          if(err instanceof RequestError) {
+            console.log(`AARGH: ${err}`);
+            this.statusFn("error", err);
+          } else {
+            throw(err);
+          }
         })
       );
       if (counter % chunkSize === 0) {

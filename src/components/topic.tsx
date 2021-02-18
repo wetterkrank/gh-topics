@@ -12,9 +12,8 @@ type TopicProps = {
 class Topic extends Component<TopicProps, {}> {
 
   clickHandle = (event: React.MouseEvent) => {
-    const repoName = event.currentTarget.innerHTML;
-    console.log(repoName);
-    this.props.clickFn(repoName);
+    const topicName = event.currentTarget.innerHTML;
+    this.props.clickFn(topicName);
   }
 
   render() {

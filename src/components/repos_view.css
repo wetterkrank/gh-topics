@@ -1,0 +1,19 @@
+.ReposView__list {
+    margin: 0;
+    padding: 0 1rem 0.5rem 1rem;
+    list-style: none;
+    line-height: 1.4rem;
+}
+
+.ReposView__closeBtn {
+    float: right;
+    /* position: absolute;
+    bottom: 10px;
+    right: 20px; */
+}
+
+.ReposView__header {
+    margin-top: 0;
+    padding: 1rem; 
+    border-bottom: 1px solid #e9ecef;
+}
