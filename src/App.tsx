@@ -1,6 +1,6 @@
 import { Component } from 'react';
 
-import 'purecss/build/pure.css';
+import 'purecss'; // NB: webpack will resolve against "browser": "build/pure-min.css" field in the package.json of Pure.css
 import './App.css';
 import SearchBar from './components/search_bar';
 import TopicsList from './components/topics_list';

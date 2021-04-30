@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import Modal from 'react-modal';
+
 import type { RepoList } from '../api/github';
 import './repos_view.css';
 

@@ -1,6 +1,6 @@
 import { Component } from "react";
-import { QueryState } from "../api/github";
 
+import { QueryState } from "../api/github";
 import "./search_bar.css";
 
 type SearchBarProps = {
